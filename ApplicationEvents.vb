@@ -16,7 +16,8 @@
                     BasicBrowser.openWithURI = BasicBrowser.openWithURI & s
                 End If
             Next
-            BasicBrowser.NewTab(Nothing, Nothing)
+            'Should this open a Gecko or IE tab by default?
+            BasicBrowser.NewGeckoTab(Nothing, Nothing)
             BasicBrowser.BringToFront()
         End Sub
     End Class

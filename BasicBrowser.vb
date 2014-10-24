@@ -27,7 +27,7 @@ Public Class BasicBrowser
     ' MenuStrip options
 
     'File
-    Sub NewTab(sender As Object, e As EventArgs) Handles ToolStripNewTab.Click, MenuStripFileNew.Click
+    Sub NewGeckoTab(sender As Object, e As EventArgs) Handles ToolStripNewGeckoTab.Click
         Dim TabPage As New TabPage()
         Dim WebBrowser As New GeckoWebBrowser
         AddHandler WebBrowser.Navigating, New GeckoNavigatingEventHandler(AddressOf Navigate)
@@ -39,6 +39,44 @@ Public Class BasicBrowser
         AddHandler WebBrowser.CanGoBackChanged, AddressOf PerformStuff
         AddHandler WebBrowser.CanGoForwardChanged, AddressOf PerformStuff
         TabPage.Text = "Loading... [G]"
+        TabControl.TabPages.Add(TabPage)
+        TabControl.SelectTab(TabControl.TabCount - 1)
+        WebBrowser.Parent = TabPage
+        WebBrowser.Dock = DockStyle.Fill
+        WebBrowser.Visible = True
+        ToolStripReload.Enabled = True
+        ToolStripHome.Enabled = True
+        ToolStripCloseTab.Enabled = True
+        ToolStripGo.Enabled = True
+        ToolStripURL.Enabled = True
+        MenuStripFileCloseTab.Enabled = True
+        MenuStripFileOpen.Enabled = True
+        MenuStripFileSave.Enabled = True
+        MenuStripFilePrint.Enabled = True
+        MenuStripFilePrintPreview.Enabled = True
+        MenuStripViewSource.Enabled = True
+        MenuStripToolsSetup.Enabled = True
+        MenuStripToolsProperties.Enabled = True
+        If openWithURI = "" Then
+            WebBrowser.Navigate("https://google.com")
+        Else
+            WebBrowser.Navigate(openWithURI)
+            openWithURI = ""
+        End If
+    End Sub
+
+    Sub NewIETab(sender As Object, e As EventArgs) Handles ToolStripNewIETab.Click
+        Dim TabPage As New TabPage()
+        Dim WebBrowser As New WebBrowser
+        AddHandler WebBrowser.Navigating, New WebBrowserNavigatingEventHandler(AddressOf Navigate)
+        AddHandler WebBrowser.Navigated, New WebBrowserNavigatedEventHandler(AddressOf Navigate)
+        AddHandler WebBrowser.DocumentCompleted, New WebBrowserDocumentCompletedEventHandler(AddressOf DocumentCompleted)
+        AddHandler WebBrowser.ProgressChanged, New WebBrowserProgressChangedEventHandler(AddressOf IEProgressChanged)
+        AddHandler WebBrowser.StatusTextChanged, AddressOf IEStatusTextChanged
+        AddHandler WebBrowser.DocumentTitleChanged, AddressOf DocumentTitleChanged
+        AddHandler WebBrowser.CanGoBackChanged, AddressOf PerformStuff
+        AddHandler WebBrowser.CanGoForwardChanged, AddressOf PerformStuff
+        TabPage.Text = "Loading... [I]"
         TabControl.TabPages.Add(TabPage)
         TabControl.SelectTab(TabControl.TabCount - 1)
         WebBrowser.Parent = TabPage

@@ -159,6 +159,7 @@
     <None Include="Resources\16x16_bookmark_remove.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Internet Explorer.png" />
     <None Include="freebl3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
