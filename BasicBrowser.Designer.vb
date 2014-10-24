@@ -26,7 +26,8 @@ Partial Class BasicBrowser
         Me.TabControl = New System.Windows.Forms.TabControl()
         Me.MenuStrip = New System.Windows.Forms.MenuStrip()
         Me.MenuStripFile = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuStripFileNew = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStripFileNewGecko = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStripFileNewIE = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripFileCloseTab = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripFileSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStripFileNewWindow = New System.Windows.Forms.ToolStripMenuItem()
@@ -34,6 +35,7 @@ Partial Class BasicBrowser
         Me.MenuStripFileSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStripFileOpen = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripFileSave = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStripFileSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStripFilePrint = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripFilePrintPreview = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripFileSeparator4 = New System.Windows.Forms.ToolStripSeparator()
@@ -76,12 +78,11 @@ Partial Class BasicBrowser
         Me.ToolStripStop = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripHome = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripNewGeckoTab = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripNewIETab = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripCloseTab = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripURL = New System.Windows.Forms.ToolStripComboBox()
         Me.ToolStripGo = New System.Windows.Forms.ToolStripButton()
         Me.GeckoWebBrowser1 = New Skybound.Gecko.GeckoWebBrowser()
-        Me.MenuStripFileSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripNewIETab = New System.Windows.Forms.ToolStripButton()
         Me.MenuStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
         Me.ToolStripNavigation.SuspendLayout()
@@ -112,19 +113,28 @@ Partial Class BasicBrowser
         '
         'MenuStripFile
         '
-        Me.MenuStripFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStripFileNew, Me.MenuStripFileCloseTab, Me.MenuStripFileSeparator1, Me.MenuStripFileNewWindow, Me.MenuStripFileCloseWindow, Me.MenuStripFileSeparator2, Me.MenuStripFileOpen, Me.MenuStripFileSave, Me.MenuStripFileSeparator3, Me.MenuStripFilePrint, Me.MenuStripFilePrintPreview, Me.MenuStripFileSeparator4, Me.MenuStripFileExit})
+        Me.MenuStripFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStripFileNewGecko, Me.MenuStripFileNewIE, Me.MenuStripFileCloseTab, Me.MenuStripFileSeparator1, Me.MenuStripFileNewWindow, Me.MenuStripFileCloseWindow, Me.MenuStripFileSeparator2, Me.MenuStripFileOpen, Me.MenuStripFileSave, Me.MenuStripFileSeparator3, Me.MenuStripFilePrint, Me.MenuStripFilePrintPreview, Me.MenuStripFileSeparator4, Me.MenuStripFileExit})
         Me.MenuStripFile.Name = "MenuStripFile"
         Me.MenuStripFile.Size = New System.Drawing.Size(38, 23)
         Me.MenuStripFile.Text = "&File"
         '
-        'MenuStripFileNew
+        'MenuStripFileNewGecko
         '
-        Me.MenuStripFileNew.Image = Global.BasicBrowser.My.Resources.Resources._1387146817_tab_new
-        Me.MenuStripFileNew.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.MenuStripFileNew.Name = "MenuStripFileNew"
-        Me.MenuStripFileNew.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.T), System.Windows.Forms.Keys)
-        Me.MenuStripFileNew.Size = New System.Drawing.Size(240, 22)
-        Me.MenuStripFileNew.Text = "&New Tab"
+        Me.MenuStripFileNewGecko.Image = Global.BasicBrowser.My.Resources.Resources._1387146817_tab_new
+        Me.MenuStripFileNewGecko.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.MenuStripFileNewGecko.Name = "MenuStripFileNewGecko"
+        Me.MenuStripFileNewGecko.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.T), System.Windows.Forms.Keys)
+        Me.MenuStripFileNewGecko.Size = New System.Drawing.Size(240, 22)
+        Me.MenuStripFileNewGecko.Text = "&New Gecko Tab"
+        '
+        'MenuStripFileNewIE
+        '
+        Me.MenuStripFileNewIE.Image = Global.BasicBrowser.My.Resources.Resources.Internet_Explorer
+        Me.MenuStripFileNewIE.Name = "MenuStripFileNewIE"
+        Me.MenuStripFileNewIE.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
+            Or System.Windows.Forms.Keys.T), System.Windows.Forms.Keys)
+        Me.MenuStripFileNewIE.Size = New System.Drawing.Size(240, 22)
+        Me.MenuStripFileNewIE.Text = "New IE Tab"
         '
         'MenuStripFileCloseTab
         '
@@ -181,6 +191,11 @@ Partial Class BasicBrowser
         Me.MenuStripFileSave.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
         Me.MenuStripFileSave.Size = New System.Drawing.Size(240, 22)
         Me.MenuStripFileSave.Text = "&Save As..."
+        '
+        'MenuStripFileSeparator3
+        '
+        Me.MenuStripFileSeparator3.Name = "MenuStripFileSeparator3"
+        Me.MenuStripFileSeparator3.Size = New System.Drawing.Size(237, 6)
         '
         'MenuStripFilePrint
         '
@@ -358,35 +373,35 @@ Partial Class BasicBrowser
         'MenuStripHelpContents
         '
         Me.MenuStripHelpContents.Name = "MenuStripHelpContents"
-        Me.MenuStripHelpContents.Size = New System.Drawing.Size(152, 22)
+        Me.MenuStripHelpContents.Size = New System.Drawing.Size(125, 22)
         Me.MenuStripHelpContents.Text = "&Contents"
         Me.MenuStripHelpContents.Visible = False
         '
         'MenuStripHelpIndex
         '
         Me.MenuStripHelpIndex.Name = "MenuStripHelpIndex"
-        Me.MenuStripHelpIndex.Size = New System.Drawing.Size(152, 22)
+        Me.MenuStripHelpIndex.Size = New System.Drawing.Size(125, 22)
         Me.MenuStripHelpIndex.Text = "&Index"
         Me.MenuStripHelpIndex.Visible = False
         '
         'MenuStripHelpSearch
         '
         Me.MenuStripHelpSearch.Name = "MenuStripHelpSearch"
-        Me.MenuStripHelpSearch.Size = New System.Drawing.Size(152, 22)
+        Me.MenuStripHelpSearch.Size = New System.Drawing.Size(125, 22)
         Me.MenuStripHelpSearch.Text = "&Search"
         Me.MenuStripHelpSearch.Visible = False
         '
         'MenuStripHelpSeparator
         '
         Me.MenuStripHelpSeparator.Name = "MenuStripHelpSeparator"
-        Me.MenuStripHelpSeparator.Size = New System.Drawing.Size(149, 6)
+        Me.MenuStripHelpSeparator.Size = New System.Drawing.Size(122, 6)
         Me.MenuStripHelpSeparator.Visible = False
         '
         'MenuStripHelpAbout
         '
         Me.MenuStripHelpAbout.Image = Global.BasicBrowser.My.Resources.Resources.Info
         Me.MenuStripHelpAbout.Name = "MenuStripHelpAbout"
-        Me.MenuStripHelpAbout.Size = New System.Drawing.Size(152, 22)
+        Me.MenuStripHelpAbout.Size = New System.Drawing.Size(125, 22)
         Me.MenuStripHelpAbout.Text = "&About..."
         '
         'ToolStripRemove
@@ -428,8 +443,8 @@ Partial Class BasicBrowser
         'StatusStripStatusText
         '
         Me.StatusStripStatusText.Name = "StatusStripStatusText"
-        Me.StatusStripStatusText.Size = New System.Drawing.Size(43, 17)
-        Me.StatusStripStatusText.Text = "Status"
+        Me.StatusStripStatusText.Size = New System.Drawing.Size(115, 17)
+        Me.StatusStripStatusText.Text = "Open a tab to start"
         '
         'ToolStripSeparator1
         '
@@ -513,6 +528,15 @@ Partial Class BasicBrowser
         Me.ToolStripNewGeckoTab.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripNewGeckoTab.Text = "New Gecko Tab"
         '
+        'ToolStripNewIETab
+        '
+        Me.ToolStripNewIETab.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripNewIETab.Image = Global.BasicBrowser.My.Resources.Resources.Internet_Explorer
+        Me.ToolStripNewIETab.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripNewIETab.Name = "ToolStripNewIETab"
+        Me.ToolStripNewIETab.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripNewIETab.Text = "New IE Tab"
+        '
         'ToolStripCloseTab
         '
         Me.ToolStripCloseTab.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
@@ -525,8 +549,9 @@ Partial Class BasicBrowser
         '
         'ToolStripURL
         '
+        Me.ToolStripURL.Enabled = False
         Me.ToolStripURL.Name = "ToolStripURL"
-        Me.ToolStripURL.Size = New System.Drawing.Size(395, 25)
+        Me.ToolStripURL.Size = New System.Drawing.Size(394, 25)
         Me.ToolStripURL.ToolTipText = "Enter URL to navigate to"
         '
         'ToolStripGo
@@ -550,20 +575,6 @@ Partial Class BasicBrowser
         Me.GeckoWebBrowser1.Size = New System.Drawing.Size(352, 23)
         Me.GeckoWebBrowser1.TabIndex = 5
         Me.GeckoWebBrowser1.Visible = False
-        '
-        'MenuStripFileSeparator3
-        '
-        Me.MenuStripFileSeparator3.Name = "MenuStripFileSeparator3"
-        Me.MenuStripFileSeparator3.Size = New System.Drawing.Size(237, 6)
-        '
-        'ToolStripNewIETab
-        '
-        Me.ToolStripNewIETab.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripNewIETab.Image = Global.BasicBrowser.My.Resources.Resources.Internet_Explorer
-        Me.ToolStripNewIETab.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripNewIETab.Name = "ToolStripNewIETab"
-        Me.ToolStripNewIETab.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripNewIETab.Text = "New IE Tab"
         '
         'BasicBrowser
         '
@@ -595,7 +606,7 @@ Partial Class BasicBrowser
     Friend WithEvents TabControl As System.Windows.Forms.TabControl
     Friend WithEvents MenuStrip As System.Windows.Forms.MenuStrip
     Friend WithEvents MenuStripFile As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents MenuStripFileNew As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MenuStripFileNewGecko As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuStripFileCloseTab As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuStripFileSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents MenuStripFileSave As System.Windows.Forms.ToolStripMenuItem
@@ -651,5 +662,6 @@ Partial Class BasicBrowser
     Friend WithEvents GeckoWebBrowser1 As Skybound.Gecko.GeckoWebBrowser
     Friend WithEvents MenuStripFileSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripNewIETab As System.Windows.Forms.ToolStripButton
+    Friend WithEvents MenuStripFileNewIE As System.Windows.Forms.ToolStripMenuItem
 
 End Class

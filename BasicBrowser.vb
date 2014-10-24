@@ -27,7 +27,7 @@ Public Class BasicBrowser
     ' MenuStrip options
 
     'File
-    Sub NewGeckoTab(sender As Object, e As EventArgs) Handles ToolStripNewGeckoTab.Click
+    Sub NewGeckoTab(sender As Object, e As EventArgs) Handles ToolStripNewGeckoTab.Click, MenuStripFileNewGecko.Click
         Dim TabPage As New TabPage()
         Dim WebBrowser As New GeckoWebBrowser
         AddHandler WebBrowser.Navigating, New GeckoNavigatingEventHandler(AddressOf Navigate)
@@ -49,13 +49,14 @@ Public Class BasicBrowser
         ToolStripCloseTab.Enabled = True
         ToolStripGo.Enabled = True
         ToolStripURL.Enabled = True
+        ToolStripAdd.Enabled = True
         MenuStripFileCloseTab.Enabled = True
-        MenuStripFileOpen.Enabled = True
+        MenuStripFileOpen.Enabled = False
         MenuStripFileSave.Enabled = True
-        MenuStripFilePrint.Enabled = True
-        MenuStripFilePrintPreview.Enabled = True
+        MenuStripFilePrint.Enabled = False
+        MenuStripFilePrintPreview.Enabled = False
         MenuStripViewSource.Enabled = True
-        MenuStripToolsSetup.Enabled = True
+        MenuStripToolsSetup.Enabled = False
         MenuStripToolsProperties.Enabled = True
         If openWithURI = "" Then
             WebBrowser.Navigate("https://google.com")
@@ -65,7 +66,7 @@ Public Class BasicBrowser
         End If
     End Sub
 
-    Sub NewIETab(sender As Object, e As EventArgs) Handles ToolStripNewIETab.Click
+    Sub NewIETab(sender As Object, e As EventArgs) Handles ToolStripNewIETab.Click, MenuStripFileNewIE.Click
         Dim TabPage As New TabPage()
         Dim WebBrowser As New WebBrowser
         AddHandler WebBrowser.Navigating, New WebBrowserNavigatingEventHandler(AddressOf Navigate)
@@ -87,6 +88,7 @@ Public Class BasicBrowser
         ToolStripCloseTab.Enabled = True
         ToolStripGo.Enabled = True
         ToolStripURL.Enabled = True
+        ToolStripAdd.Enabled = True
         MenuStripFileCloseTab.Enabled = True
         MenuStripFileOpen.Enabled = True
         MenuStripFileSave.Enabled = True
@@ -96,7 +98,7 @@ Public Class BasicBrowser
         MenuStripToolsSetup.Enabled = True
         MenuStripToolsProperties.Enabled = True
         If openWithURI = "" Then
-            WebBrowser.Navigate("https://google.com")
+            WebBrowser.GoHome()
         Else
             WebBrowser.Navigate(openWithURI)
             openWithURI = ""
@@ -132,6 +134,7 @@ Public Class BasicBrowser
             ToolStripCloseTab.Enabled = False
             ToolStripGo.Enabled = False
             ToolStripURL.Enabled = False
+            ToolStripAdd.Enabled = False
             MenuStripFileCloseTab.Enabled = False
             MenuStripFileOpen.Enabled = False
             MenuStripFileSave.Enabled = False
@@ -451,17 +454,19 @@ Public Class BasicBrowser
         End If
     End Sub
 
-    Private Sub TabControl_Click(sender As Object, e As EventArgs) Handles TabControl.Click, TabControl.KeyUp
-        If TabControl.SelectedTab.Text.EndsWith("[G]") Then
-            ToolStripStop.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).IsBusy
-        ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
-            ToolStripStop.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).IsBusy
+    Private Sub TabControl_Click(sender As Object, e As EventArgs) Handles TabControl.Click, TabControl.KeyUp ' Switching tabs
+        If TabControl.TabCount <> 0 Then
+            If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+                ToolStripStop.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).IsBusy
+            ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
+                ToolStripStop.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).IsBusy
+            End If
+            PerformStuff()
         End If
-        PerformStuff()
     End Sub
 
     Private Sub BasicBrowser_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged, MyBase.Resize
-        ToolStripURL.Size = New Size(Me.Width - 243, 25)
+        ToolStripURL.Size = New Size(Me.Width - 264, 25)
     End Sub
 
     'Favourites bar (Integrated into URL bar)
@@ -551,12 +556,24 @@ Public Class BasicBrowser
             If ToolStripURL.Focused = False Then
                 ToolStripURL.Text = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Url.ToString
             End If
+            MenuStripFileOpen.Enabled = False
+            MenuStripFilePrint.Enabled = False
+            MenuStripFilePrintPreview.Enabled = False
+            MenuStripToolsSetup.Enabled = False
         ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
             ToolStripBack.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).CanGoBack
             ToolStripForward.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).CanGoForward
             If ToolStripURL.Focused = False Then
-                ToolStripURL.Text = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).Url.ToString
+                Try
+                    ToolStripURL.Text = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).Url.ToString
+                Catch ex As Exception
+                    StatusStripStatusText.Text = "Error[I.GetURL]: " & ex.Message
+                End Try
             End If
+            MenuStripFileOpen.Enabled = True
+            MenuStripFilePrint.Enabled = True
+            MenuStripFilePrintPreview.Enabled = True
+            MenuStripToolsSetup.Enabled = True
         End If
     End Sub
 End Class
