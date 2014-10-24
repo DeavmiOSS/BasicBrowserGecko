@@ -11,6 +11,8 @@ http://www.dreamincode.net/forums/topic/60702-extending-the-webbrowser/
 
 Now with [GeckoFX](https://code.google.com/p/geckofx/). As a result, please extract the `XULRunner misc files.rar` archive to the `Debug` (or `Release` if you are compiling to there) folder before running BasicBrowser (you can compile it without problems though). The main DLLs of XULRunner are copied automatically by compiling.
 
+This is the `hybrid` branch, it allows you to open a `GeckoFX` tab or an `(.Net) IE` tab.
+
 #### Screenshot
 You can Hold <kbd>Alt</kbd> to move the buttons around on the main interface. To reset, simply restart BasicBrowser.
 ![Screenshot](http://walkman100.github.io/Walkman/Images/WindowsProjectsScreenshots/BasicBrowser/MainWindow.png)
