@@ -616,12 +616,12 @@ Public Class BasicBrowser
             For i = 1 To TabControl.TabCount
                 If TabControl.TabPages.Item(i - 1).Text.EndsWith("[G]") Then
                     If ReloadTitles.Contains(CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), GeckoWebBrowser).DocumentTitle) Then
-                        ToolStripURL.Text = "Refreshing now..."
+                        StatusStripStatusText.Text = "Refreshing now..."
                         CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), GeckoWebBrowser).Reload()
                     End If
                 ElseIf TabControl.TabPages.Item(i - 1).Text.EndsWith("[I]") Then
                     If ReloadTitles.Contains(CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), WebBrowser).DocumentTitle) Then
-                        ToolStripURL.Text = "Refreshing now..."
+                        StatusStripStatusText.Text = "Refreshing now..."
                         ' this code never seems to run, it seems that the DocumentTitle is never contained in the StringArray, even when it is.
                         ' note after testing this code again, it seems that you have to run the edit loop before it will work
                         CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), WebBrowser).Refresh()
