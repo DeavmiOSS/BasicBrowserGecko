@@ -1,9 +1,16 @@
 ﻿Imports Skybound.Gecko
 
 Public Class BasicBrowser
+    ' Made by ░▒▓█│【Walkman】│█▓▒░
 
     'use `CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser)` to refer to the GeckoWebBrowser on the active tab
     'use `CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser)` to refer to the WebBrowser on the active tab
+    ' use the following to do different things depending on the type of browser:
+    '   If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+    '       CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).
+    '   ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
+    '       CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).
+    '   End If
 
     Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(BasicBrowser)) ' Copied from the designer, so i can get resources at RunTime
 
@@ -50,11 +57,12 @@ Public Class BasicBrowser
         ToolStripGo.Enabled = True
         ToolStripURL.Enabled = True
         ToolStripAdd.Enabled = True
+        ToolStripRemove.Enabled = True
         MenuStripFileCloseTab.Enabled = True
-        MenuStripFileOpen.Enabled = False
+        MenuStripFileOpen.Enabled = True
         MenuStripFileSave.Enabled = True
-        MenuStripFilePrint.Enabled = False
-        MenuStripFilePrintPreview.Enabled = False
+        MenuStripFilePrint.Enabled = True
+        MenuStripFilePrintPreview.Enabled = True
         MenuStripViewSource.Enabled = True
         MenuStripToolsSetup.Enabled = False
         MenuStripToolsProperties.Enabled = True
@@ -83,12 +91,14 @@ Public Class BasicBrowser
         WebBrowser.Parent = TabPage
         WebBrowser.Dock = DockStyle.Fill
         WebBrowser.Visible = True
+        WebBrowser.ScriptErrorsSuppressed = True
         ToolStripReload.Enabled = True
         ToolStripHome.Enabled = True
         ToolStripCloseTab.Enabled = True
         ToolStripGo.Enabled = True
         ToolStripURL.Enabled = True
         ToolStripAdd.Enabled = True
+        ToolStripRemove.Enabled = True
         MenuStripFileCloseTab.Enabled = True
         MenuStripFileOpen.Enabled = True
         MenuStripFileSave.Enabled = True
@@ -135,6 +145,7 @@ Public Class BasicBrowser
             ToolStripGo.Enabled = False
             ToolStripURL.Enabled = False
             ToolStripAdd.Enabled = False
+            ToolStripRemove.Enabled = False
             MenuStripFileCloseTab.Enabled = False
             MenuStripFileOpen.Enabled = False
             MenuStripFileSave.Enabled = False
@@ -171,7 +182,9 @@ Public Class BasicBrowser
         OpenFileDialog.Filter = "Webpages|*.html|All Files|*.*"
         OpenFileDialog.Title = "Open Webpage"
         If (OpenFileDialog.ShowDialog() = DialogResult.OK) Then
-            If TabControl.SelectedTab.Text.EndsWith("[I]") Then
+            If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+                CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Navigate(OpenFileDialog.FileName)
+            ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
                 CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).DocumentText = System.IO.File.ReadAllText(OpenFileDialog.FileName)
             End If
         End If
@@ -192,13 +205,28 @@ Public Class BasicBrowser
     End Sub
 
     Private Sub MenuStripFilePrint_Click(sender As Object, e As EventArgs) Handles MenuStripFilePrint.Click
-        If TabControl.SelectedTab.Text.EndsWith("[I]") Then
+        If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+            Dim PrintDialog As New PrintDialog
+
+            Dim PrintDocument As New System.Drawing.Printing.PrintDocument
+            'PrintDocument = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Document
+            PrintDialog.Document = PrintDocument
+
+            If (PrintDialog.ShowDialog() = DialogResult.OK) Then
+                PrintDocument.PrinterSettings = PrintDialog.PrinterSettings
+                PrintDocument.Print()
+            End If
+        ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
             CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).ShowPrintDialog()
         End If
     End Sub
 
     Private Sub MenuStripFilePrintPreview_Click(sender As Object, e As EventArgs) Handles MenuStripFilePrintPreview.Click
-        If TabControl.SelectedTab.Text.EndsWith("[I]") Then
+        If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+            Dim PrintPreviewDialog As New PrintPreviewDialog
+            'PrintPreviewDialog.Document = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Document
+            PrintPreviewDialog.Show()
+        ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
             CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).ShowPrintPreviewDialog()
             Me.WindowState = FormWindowState.Minimized
         End If
@@ -318,7 +346,15 @@ Public Class BasicBrowser
     Private Sub MenuStripToolsSetup_Click(sender As Object, e As EventArgs) Handles MenuStripToolsSetup.Click
         If TabControl.SelectedTab.Text.EndsWith("[I]") Then
             CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).ShowPageSetupDialog()
+        Else
+            openWithURI = "about:config"
+            NewGeckoTab(Nothing, Nothing)
         End If
+    End Sub
+
+    Private Sub MenuStripToolsGecko_Click(sender As Object, e As EventArgs) Handles MenuStripToolsGecko.Click
+        openWithURI = "about:config"
+        NewGeckoTab(Nothing, Nothing)
     End Sub
 
     Private Sub MenuStripToolsProperties_Click(sender As Object, e As EventArgs) Handles MenuStripToolsProperties.Click
@@ -327,6 +363,18 @@ Public Class BasicBrowser
         ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
             CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).ShowPropertiesDialog()
         End If
+    End Sub
+
+    Private Sub MenuStripToolsInternetProperties_Click(sender As Object, e As EventArgs) Handles MenuStripToolsInternetProperties.Click
+        Process.Start("inetcpl.cpl")
+    End Sub
+
+    Private Sub MenuStripToolsInternetProxy_Click(sender As Object, e As EventArgs) Handles MenuStripToolsInternetProxy.Click
+        Process.Start("inetcpl.cpl", ",4")
+    End Sub
+
+    Private Sub MenuStripToolsNetworkDiagnostics_Click(sender As Object, e As EventArgs) Handles MenuStripToolsNetworkDiagnostics.Click
+        Process.Start("rundll32.exe", "ndfapi,NdfRunDllDiagnoseIncident")
     End Sub
 
     'About
@@ -345,9 +393,9 @@ Public Class BasicBrowser
         AboutForm.Controls.Add(lblAboutText)
         lblAboutText.Dock = DockStyle.Fill
         lblAboutText.Text = _
-            "Made by Walkman100" & vbNewLine & vbNewLine & _
+            "Made by ░▒▓█│【Walkman】│█▓▒░ (Walkman100)" & vbNewLine & vbNewLine & _
             "Source code available at: https://github.com/Walkman100/BasicBrowser/tree/hybrid" & vbNewLine & vbNewLine & _
-            "Go to http://github.com/Walkman100/BasicBrowser/issues/new to report bugs or suggest features" & vbNewLine & vbNewLine & _
+            "Go to https://github.com/Walkman100/BasicBrowser/issues/new to report bugs or suggest features" & vbNewLine & vbNewLine & _
             "Hold ALT to reorganise all the buttons/menus at the top" & vbNewLine & vbNewLine & _
             "Current Version: " & My.Application.Info.Version.ToString
         AboutForm.Show()
@@ -368,9 +416,6 @@ Public Class BasicBrowser
     Private Sub ToolStripBack_DropDownOpening(sender As Object, e As EventArgs) Handles ToolStripBack.DropDownOpening
         ToolStripBack.DropDownItems.Clear()
         For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Count
-            'Dim HistoryItem As New ToolStripMenuItem
-            'HistoryItem.Text = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Item(i - 1).ToString
-            'ToolStripBack.DropDownItems.Add(HistoryItem)
             If TabControl.SelectedTab.Text.EndsWith("[G]") Then
                 ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Item(i - 1).ToString)
             ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
@@ -548,7 +593,7 @@ Public Class BasicBrowser
             End If
         Next
     End Sub
-    
+
     Sub PerformStuff()
         If TabControl.SelectedTab.Text.EndsWith("[G]") Then
             ToolStripBack.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).CanGoBack
@@ -556,9 +601,6 @@ Public Class BasicBrowser
             If ToolStripURL.Focused = False Then
                 ToolStripURL.Text = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Url.ToString
             End If
-            MenuStripFileOpen.Enabled = False
-            MenuStripFilePrint.Enabled = False
-            MenuStripFilePrintPreview.Enabled = False
             MenuStripToolsSetup.Enabled = False
         ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
             ToolStripBack.Enabled = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).CanGoBack
@@ -570,9 +612,6 @@ Public Class BasicBrowser
                     StatusStripStatusText.Text = "Error[I.GetURL]: " & ex.Message
                 End Try
             End If
-            MenuStripFileOpen.Enabled = True
-            MenuStripFilePrint.Enabled = True
-            MenuStripFilePrintPreview.Enabled = True
             MenuStripToolsSetup.Enabled = True
         End If
     End Sub

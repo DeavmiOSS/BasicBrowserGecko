@@ -58,6 +58,10 @@ Partial Class BasicBrowser
         Me.MenuStripTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripToolsSetup = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripToolsProperties = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStripToolsSeperator = New System.Windows.Forms.ToolStripSeparator()
+        Me.MenuStripToolsInternetProperties = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStripToolsInternetProxy = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStripToolsNetworkDiagnostics = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripHelpContents = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripHelpIndex = New System.Windows.Forms.ToolStripMenuItem()
@@ -82,7 +86,7 @@ Partial Class BasicBrowser
         Me.ToolStripCloseTab = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripURL = New System.Windows.Forms.ToolStripComboBox()
         Me.ToolStripGo = New System.Windows.Forms.ToolStripButton()
-        Me.GeckoWebBrowser1 = New Skybound.Gecko.GeckoWebBrowser()
+        Me.MenuStripToolsGecko = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip.SuspendLayout()
         Me.StatusStrip.SuspendLayout()
         Me.ToolStripNavigation.SuspendLayout()
@@ -343,7 +347,7 @@ Partial Class BasicBrowser
         '
         'MenuStripTools
         '
-        Me.MenuStripTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStripToolsSetup, Me.MenuStripToolsProperties})
+        Me.MenuStripTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStripToolsSetup, Me.MenuStripToolsGecko, Me.MenuStripToolsProperties, Me.MenuStripToolsSeperator, Me.MenuStripToolsInternetProperties, Me.MenuStripToolsNetworkDiagnostics})
         Me.MenuStripTools.Name = "MenuStripTools"
         Me.MenuStripTools.Size = New System.Drawing.Size(49, 23)
         Me.MenuStripTools.Text = "&Tools"
@@ -352,7 +356,7 @@ Partial Class BasicBrowser
         '
         Me.MenuStripToolsSetup.Enabled = False
         Me.MenuStripToolsSetup.Name = "MenuStripToolsSetup"
-        Me.MenuStripToolsSetup.Size = New System.Drawing.Size(214, 22)
+        Me.MenuStripToolsSetup.Size = New System.Drawing.Size(222, 22)
         Me.MenuStripToolsSetup.Text = "Page &Setup..."
         '
         'MenuStripToolsProperties
@@ -360,8 +364,32 @@ Partial Class BasicBrowser
         Me.MenuStripToolsProperties.Enabled = False
         Me.MenuStripToolsProperties.Name = "MenuStripToolsProperties"
         Me.MenuStripToolsProperties.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
-        Me.MenuStripToolsProperties.Size = New System.Drawing.Size(214, 22)
+        Me.MenuStripToolsProperties.Size = New System.Drawing.Size(222, 22)
         Me.MenuStripToolsProperties.Text = "Page P&roperties..."
+        '
+        'MenuStripToolsSeperator
+        '
+        Me.MenuStripToolsSeperator.Name = "MenuStripToolsSeperator"
+        Me.MenuStripToolsSeperator.Size = New System.Drawing.Size(219, 6)
+        '
+        'MenuStripToolsInternetProperties
+        '
+        Me.MenuStripToolsInternetProperties.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStripToolsInternetProxy})
+        Me.MenuStripToolsInternetProperties.Name = "MenuStripToolsInternetProperties"
+        Me.MenuStripToolsInternetProperties.Size = New System.Drawing.Size(222, 22)
+        Me.MenuStripToolsInternetProperties.Text = "Internet Properties..."
+        '
+        'MenuStripToolsInternetProxy
+        '
+        Me.MenuStripToolsInternetProxy.Name = "MenuStripToolsInternetProxy"
+        Me.MenuStripToolsInternetProxy.Size = New System.Drawing.Size(323, 22)
+        Me.MenuStripToolsInternetProxy.Text = "Proxy settings... (Click LAN settings button)"
+        '
+        'MenuStripToolsNetworkDiagnostics
+        '
+        Me.MenuStripToolsNetworkDiagnostics.Name = "MenuStripToolsNetworkDiagnostics"
+        Me.MenuStripToolsNetworkDiagnostics.Size = New System.Drawing.Size(222, 22)
+        Me.MenuStripToolsNetworkDiagnostics.Text = "Network Diagnostics..."
         '
         'MenuStripHelp
         '
@@ -408,6 +436,7 @@ Partial Class BasicBrowser
         '
         Me.ToolStripRemove.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.ToolStripRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripRemove.Enabled = False
         Me.ToolStripRemove.Image = Global.BasicBrowser.My.Resources.Resources._16x16_bookmark_remove
         Me.ToolStripRemove.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripRemove.Name = "ToolStripRemove"
@@ -565,23 +594,18 @@ Partial Class BasicBrowser
         Me.ToolStripGo.Text = "Go >>"
         Me.ToolStripGo.ToolTipText = "Go >"
         '
-        'GeckoWebBrowser1
+        'MenuStripToolsGecko
         '
-        Me.GeckoWebBrowser1.AllowDrop = True
-        Me.GeckoWebBrowser1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GeckoWebBrowser1.Location = New System.Drawing.Point(231, 1)
-        Me.GeckoWebBrowser1.Name = "GeckoWebBrowser1"
-        Me.GeckoWebBrowser1.Size = New System.Drawing.Size(352, 23)
-        Me.GeckoWebBrowser1.TabIndex = 5
-        Me.GeckoWebBrowser1.Visible = False
+        Me.MenuStripToolsGecko.Name = "MenuStripToolsGecko"
+        Me.MenuStripToolsGecko.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
+        Me.MenuStripToolsGecko.Size = New System.Drawing.Size(222, 22)
+        Me.MenuStripToolsGecko.Text = "GeckoFX &Options..."
         '
         'BasicBrowser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(642, 381)
-        Me.Controls.Add(Me.GeckoWebBrowser1)
         Me.Controls.Add(Me.ToolStripNavigation)
         Me.Controls.Add(Me.StatusStrip)
         Me.Controls.Add(Me.TabControl)
@@ -659,9 +683,13 @@ Partial Class BasicBrowser
     Friend WithEvents MenuStripFileNewWindow As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MenuStripFileCloseWindow As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripURL As System.Windows.Forms.ToolStripComboBox
-    Friend WithEvents GeckoWebBrowser1 As Skybound.Gecko.GeckoWebBrowser
     Friend WithEvents MenuStripFileSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripNewIETab As System.Windows.Forms.ToolStripButton
     Friend WithEvents MenuStripFileNewIE As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MenuStripToolsInternetProperties As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MenuStripToolsInternetProxy As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MenuStripToolsSeperator As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents MenuStripToolsNetworkDiagnostics As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents MenuStripToolsGecko As System.Windows.Forms.ToolStripMenuItem
 
 End Class
