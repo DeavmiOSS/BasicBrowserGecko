@@ -16,7 +16,7 @@ Public Class BasicBrowser
 
     Public openWithURI As String
     Dim TabToClose As Integer
-    Dim ReloadTitles() As String = {"Navigation Canceled", "This page can't be displayed"}
+    Dim ReloadTitles() As String = {"Navigation Canceled", "This page can't be displayed", Nothing, Nothing, Nothing}
 
     Private Sub BasicBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         For Each s As String In My.Application.CommandLineArgs
@@ -382,6 +382,10 @@ Public Class BasicBrowser
         If e.Button = Windows.Forms.MouseButtons.Right Then
             For i = 1 To ReloadTitles.Length
                 ReloadTitles.SetValue(InputBox("Page title no. " & i & ":", "Auto-Reload required titles", ReloadTitles.GetValue(i - 1)), i - 1)
+                If DialogResult = Windows.Forms.DialogResult.Cancel Then
+                    ' this doesn't seem to pick up that the cancel button was pressed
+                    Exit Sub
+                End If
             Next
         End If
     End Sub
