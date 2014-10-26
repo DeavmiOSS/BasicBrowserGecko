@@ -16,7 +16,8 @@ Public Class BasicBrowser
 
     Public openWithURI As String
     Dim TabToClose As Integer
-
+    Dim ReloadTitles() As String = {"Navigation Canceled", "This page can't be displayed"}
+    
     Private Sub BasicBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         For Each s As String In My.Application.CommandLineArgs
             If openWithURI = "" Then
@@ -375,6 +376,14 @@ Public Class BasicBrowser
 
     Private Sub MenuStripToolsNetworkDiagnostics_Click(sender As Object, e As EventArgs) Handles MenuStripToolsNetworkDiagnostics.Click
         Process.Start("rundll32.exe", "ndfapi,NdfRunDllDiagnoseIncident")
+    End Sub
+
+    Private Sub MenuStripToolsAutoReload_MouseUp(sender As Object, e As MouseEventArgs) Handles MenuStripToolsAutoReload.MouseUp
+        If e.Button = Windows.Forms.MouseButtons.Right Then
+            For i = 1 To ReloadTitles.Length
+                ReloadTitles.SetValue(InputBox("Page title no. " & i & ":", "Auto-Reload required titles", ReloadTitles.GetValue(i - 1)), i - 1)
+            Next
+        End If
     End Sub
 
     'About
