@@ -17,7 +17,7 @@ Public Class BasicBrowser
     Public openWithURI As String
     Dim TabToClose As Integer
     Dim ReloadTitles() As String = {"Navigation Canceled", "This page can't be displayed"}
-    
+
     Private Sub BasicBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         For Each s As String In My.Application.CommandLineArgs
             If openWithURI = "" Then
@@ -424,13 +424,15 @@ Public Class BasicBrowser
 
     Private Sub ToolStripBack_DropDownOpening(sender As Object, e As EventArgs) Handles ToolStripBack.DropDownOpening
         ToolStripBack.DropDownItems.Clear()
-        For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Count
-            If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+        If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+            For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Count
                 ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Item(i - 1).ToString)
-            ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
-                'ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).History.Item(i - 1).ToString)
-            End If
-        Next
+            Next
+        ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
+            'For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).History.Count
+            '    ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).History.Item(i - 1).ToString)
+            'Next
+        End If
     End Sub
 
     Private Sub ToolStripForward_ButtonClick(sender As Object, e As EventArgs) Handles ToolStripForward.ButtonClick
@@ -445,13 +447,15 @@ Public Class BasicBrowser
 
     Private Sub ToolStripForward_DropDownOpening(sender As Object, e As EventArgs) Handles ToolStripForward.DropDownOpening
         ToolStripForward.DropDownItems.Clear()
-        For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Count
-            If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+        If TabControl.SelectedTab.Text.EndsWith("[G]") Then
+            For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Count
                 ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).History.Item(i - 1).ToString)
-            ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
-                'ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).History.Item(i - 1).ToString)
-            End If
-        Next
+            Next
+        ElseIf TabControl.SelectedTab.Text.EndsWith("[I]") Then
+            'For i = 1 To CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).History.Count
+            '    ToolStripBack.DropDownItems.Add(CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).History.Item(i - 1).ToString)
+            'Next
+        End If
     End Sub
 
     Private Sub ToolStripReload_Click(sender As Object, e As EventArgs) Handles ToolStripReload.Click
@@ -564,7 +568,7 @@ Public Class BasicBrowser
         PerformStuff()
     End Sub
 
-    Sub GeckoProgressChanged(ByVal sender As Object, ByVal e As Skybound.Gecko.GeckoProgressEventArgs)
+    Sub GeckoProgressChanged(ByVal sender As Object, ByVal e As GeckoProgressEventArgs)
         StatusStripProgressBar.Value = (e.CurrentProgress / e.MaximumProgress) * 100
         If ToolStripURL.Focused = False Then
             ToolStripURL.Text = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Url.ToString
@@ -585,6 +589,7 @@ Public Class BasicBrowser
     End Sub
 
     Sub DocumentTitleChanged()
+        ' Update window title
         If TabControl.SelectedTab.Text.EndsWith("[G]") Then
             If CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).DocumentTitle <> "" Then
                 Me.Text = CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).DocumentTitle & " - BasicBrowser"
@@ -594,6 +599,7 @@ Public Class BasicBrowser
                 Me.Text = CType(TabControl.SelectedTab.Controls.Item(0), WebBrowser).DocumentTitle & " - BasicBrowser"
             End If
         End If
+        ' Update all tab names
         For i = 1 To TabControl.TabCount
             If TabControl.TabPages.Item(i - 1).Text.EndsWith("[G]") Then
                 TabControl.TabPages.Item(i - 1).Text = CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), GeckoWebBrowser).DocumentTitle & " - [G]"
@@ -601,6 +607,24 @@ Public Class BasicBrowser
                 TabControl.TabPages.Item(i - 1).Text = CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), WebBrowser).DocumentTitle & " - [I]"
             End If
         Next
+        ' Reload tab if bad name
+        If MenuStripToolsAutoReload.Checked = True Then
+            For i = 1 To TabControl.TabCount
+                If TabControl.TabPages.Item(i - 1).Text.EndsWith("[G]") Then
+                    If ReloadTitles.Contains(CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), GeckoWebBrowser).DocumentTitle) Then
+                        ToolStripURL.Text = "Refreshing now..."
+                        CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), GeckoWebBrowser).Reload()
+                    End If
+                ElseIf TabControl.TabPages.Item(i - 1).Text.EndsWith("[I]") Then
+                    If ReloadTitles.Contains(CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), WebBrowser).DocumentTitle) Then
+                        ToolStripURL.Text = "Refreshing now..."
+                        ' this code never seems to run, it seems that the DocumentTitle is never contained in the StringArray, even when it is.
+                        ' note after testing this code again, it seems that you have to run the edit loop before it will work
+                        CType(TabControl.TabPages.Item(i - 1).Controls.Item(0), WebBrowser).Refresh()
+                    End If
+                End If
+            Next
+        End If
     End Sub
 
     Sub PerformStuff()

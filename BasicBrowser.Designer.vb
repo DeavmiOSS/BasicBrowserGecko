@@ -506,6 +506,7 @@ Partial Class BasicBrowser
         Me.StatusStripStatusText.Name = "StatusStripStatusText"
         Me.StatusStripStatusText.Size = New System.Drawing.Size(115, 17)
         Me.StatusStripStatusText.Text = "Open a tab to start"
+        Me.StatusStripStatusText.ToolTipText = "Status"
         '
         'ToolStripSeparator1
         '
