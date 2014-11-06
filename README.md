@@ -1,6 +1,7 @@
-BasicBrowser [![Build status](https://ci.appveyor.com/api/projects/status/vk3okvf6qmlpykgx)](https://ci.appveyor.com/project/Walkman100/basicbrowser)
-============
+# BasicBrowser [![Build status](https://ci.appveyor.com/api/projects/status/9wuf4hyj130rtern)](https://ci.appveyor.com/project/Walkman100/basicbrowsergecko)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Walkman100/Walkman?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+As of November 2014, this repo has the Gecko branch, it was previously in [Walkman100/BasicBrowser](https://github.com/Walkman100/BasicBrowser). The hybrid branch has also been transferred here, since it is essentially BasicBrowserGecko with the ability to open IE tabs as well.
 
 A simple tabbed browser coded in Vb.Net.
 
@@ -13,4 +14,4 @@ Now with [GeckoFX](https://code.google.com/p/geckofx/). As a result, please extr
 
 #### Screenshot
 You can Hold <kbd>Alt</kbd> to move the buttons around on the main interface. To reset, simply restart BasicBrowser.
-![Screenshot](http://walkman100.github.io/Walkman/Images/WindowsProjectsScreenshots/BasicBrowser/MainWindow.png)
+[![Screenshot](http://walkman100.github.io/Walkman/Images/WindowsProjectsScreenshots/BasicBrowser/MainWindow.png)](http://walkman100.github.io/Walkman/Images/WindowsProjectsScreenshots/BasicBrowser/MainWindow.png)
