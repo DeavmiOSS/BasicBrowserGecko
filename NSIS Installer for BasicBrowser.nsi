@@ -2,8 +2,8 @@
 ; get NSIS at http://tenet.dl.sourceforge.net/project/nsis/NSIS%202/2.46/nsis-2.46-setup.exe
 ; As a program that all Power PC users should have, Notepad ++ is recommended to edit this file
 
-;AddBrandingImage top 20
-;Icon youtube_withLink.ico
+AddBrandingImage top 20
+Icon "Resources\internet2.ico"
 Caption "BasicBrowser(Gecko) Installer"
 Name "BasicBrowser(Gecko)"
 AutoCloseWindow true
@@ -85,7 +85,27 @@ SubSectionEnd
 Section "Uninstall"
   Delete $INSTDIR\BasicBrowser(Gecko)-Uninst.exe   ; Remove Application Files
   Delete $INSTDIR\BasicBrowser.exe
+  ; DLLs
+  Delete $INSTDIR\*.dll
+  ; Sub-Folders
+  Delete /r "chrome"
+  Delete /r "components"
+  Delete /r "defaults"
+  Delete /r "dictionaries"
+  Delete /r "greprefs"
+  Delete /r "modules"
+  Delete /r "plugins"
+  Delete /r "res"
+  
   RMDir $INSTDIR
+  RMDir chrome
+  RMDir components
+  RMDir defaults
+  RMDir dictionaries
+  RMDir greprefs
+  RMDir modules
+  RMDir plugins
+  RMDir res
   
   Delete $SMPROGRAMS\DeavmiOSS\BasicBrowser(Gecko).lnk   ; Remove Start Menu Shortcuts & Folder
   Delete "$SMPROGRAMS\DeavmiOSS\Uninstall BasicBrowser(Gecko).lnk"
@@ -105,14 +125,14 @@ Function .onInit
   MessageBox MB_YESNO "This will install BasicBrowser(Gecko). Do you wish to continue?" IDYES gogogo
     Abort
   gogogo:
-  ;SetBrandingImage "[/RESIZETOFIT] youtube_withLink.ico"
+  SetBrandingImage "[/RESIZETOFIT] Resources\internet2.ico"
   SetShellVarContext all
   SetAutoClose true
 FunctionEnd
 
 Function .onInstSuccess
     MessageBox MB_YESNO "Install Succeeded! Open ReadMe?" IDNO NoReadme
-      ExecShell "open" "https://github.com/Walkman100/BasicBrowser/blob/gecko/README.md#basicbrowser-"
+      ExecShell "open" "https://github.com/DeavmiOSS/BasicBrowserGecko/blob/gecko/README.md#basicbrowser-"
     NoReadme:
 FunctionEnd
 
