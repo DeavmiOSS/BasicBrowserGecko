@@ -1,6 +1,6 @@
 ; BasicBrowser Installer NSIS Script
-; get NSIS at http://tenet.dl.sourceforge.net/project/nsis/NSIS%202/2.46/nsis-2.46-setup.exe
-; As a program that all Power PC users should have, Notepad ++ is recommended to edit this file
+; get NSIS at http://nsis.sourceforge.net/Download
+; As a program that all Power PC users should have, Notepad++ is recommended to edit this file
 
 AddBrandingImage top 20
 Icon "Resources\internet2.ico"
@@ -107,12 +107,12 @@ Section "Uninstall"
   RMDir plugins
   RMDir res
   
-  Delete $SMPROGRAMS\DeavmiOSS\BasicBrowser(Gecko).lnk   ; Remove Start Menu Shortcuts & Folder
+  Delete "$SMPROGRAMS\DeavmiOSS\BasicBrowser(Gecko).lnk"   ; Remove Start Menu Shortcuts & Folder
   Delete "$SMPROGRAMS\DeavmiOSS\Uninstall BasicBrowser(Gecko).lnk"
   RMDir $SMPROGRAMS\DeavmiOSS
   
-  Delete $DESKTOP\BasicBrowser(Gecko).lnk   ; Remove Desktop Shortcut
-  Delete $QUICKLAUNCH\BasicBrowser(Gecko).lnk   ; Remove Quick Launch Shortcut
+  Delete "$DESKTOP\BasicBrowser(Gecko).lnk"   ; Remove Desktop Shortcut
+  Delete "$QUICKLAUNCH\BasicBrowser(Gecko).lnk"   ; Remove Quick Launch Shortcut
   
   DeleteRegKey HKCR Applications\BasicBrowser(Gecko).exe ; Remove open with association
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\OpenWithList" "k"
