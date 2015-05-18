@@ -221,7 +221,7 @@ Public Class BasicBrowser
 
     Private Sub MenuStripEditPaste_Click(sender As Object, e As EventArgs) Handles MenuStripEditPaste.Click
         If ToolStripURL.Focused = True Then
-            ToolStripURL.Text = ToolStripURL.Text.Remove(ToolStripURL.SelectionStart) & Clipboard.GetText & ToolStripURL.Text.Remove(0, ToolStripURL.SelectionStart)
+            ToolStripURL.Text = ToolStripURL.Text.Remove(ToolStripURL.SelectionStart) & Clipboard.GetText & ToolStripURL.Text.Substring(ToolStripURL.SelectionStart)
         ElseIf TabControl.TabCount <> 0 Then
             CType(TabControl.SelectedTab.Controls.Item(0), GeckoWebBrowser).Paste()
         End If
