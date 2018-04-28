@@ -2,21 +2,22 @@
 ; get NSIS at http://nsis.sourceforge.net/Download
 ; As a program that all Power PC users should have, Notepad++ is recommended to edit this file
 
-AddBrandingImage top 20
+!define ProgramName "BasicBrowser"
 Icon "Resources\internet2.ico"
-Caption "BasicBrowser(Gecko) Installer"
-Name "BasicBrowser(Gecko)"
-AutoCloseWindow true
+
+Name "${ProgramName}(Gecko)"
+Caption "${ProgramName}(Gecko) Installer"
+XPStyle on
 ShowInstDetails show
+AutoCloseWindow true
 
 LicenseBkColor /windows
 LicenseData "LICENSE.md"
 LicenseForceSelection checkbox "I have read and understand this notice"
-LicenseText "Please read the notice below before installing BasicBrowser. If you understand the notice, click the checkbox below and click Next."
+LicenseText "Please read the notice below before installing ${ProgramName}. If you understand the notice, click the checkbox below and click Next."
 
-InstallDir $PROGRAMFILES\DeavmiOSS\BasicBrowser(Gecko)
-
-OutFile "bin\Release\BasicBrowser-Installer.exe"
+InstallDir $PROGRAMFILES\DeavmiOSS\${ProgramName}(Gecko)
+OutFile "bin\Release\${ProgramName}-Installer.exe"
 
 ; Pages
 
@@ -24,6 +25,7 @@ Page license
 Page components
 Page directory
 Page instfiles
+Page custom postInstallShow postInstallFinish ": Install Complete"
 UninstPage uninstConfirm
 UninstPage instfiles
 
@@ -32,8 +34,8 @@ UninstPage instfiles
 Section "Executable, Uninstaller & DLLs"
   SectionIn RO
   SetOutPath $INSTDIR
-  File "bin\Release\BasicBrowser.exe"
-  WriteUninstaller "BasicBrowser(Gecko)-Uninst.exe"
+  File "bin\Release\${ProgramName}.exe"
+  WriteUninstaller "${ProgramName}(Gecko)-Uninst.exe"
   
   ; DLLs
   File "bin\Release\*.dll"
@@ -50,41 +52,94 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\DeavmiOSS"
-  CreateShortCut "$SMPROGRAMS\DeavmiOSS\BasicBrowser(Gecko).lnk" "$INSTDIR\BasicBrowser.exe" "" "$INSTDIR\BasicBrowser.exe" "" "" "" "BasicBrowser(Gecko)"
-  CreateShortCut "$SMPROGRAMS\DeavmiOSS\Uninstall BasicBrowser(Gecko).lnk" "$INSTDIR\BasicBrowser(Gecko)-Uninst.exe" "" "" "" "" "" "Uninstall BasicBrowser(Gecko)"
+  CreateShortCut "$SMPROGRAMS\DeavmiOSS\${ProgramName}(Gecko).lnk" "$INSTDIR\${ProgramName}.exe" "" "$INSTDIR\${ProgramName}.exe" "" "" "" "${ProgramName}(Gecko)"
+  CreateShortCut "$SMPROGRAMS\DeavmiOSS\Uninstall ${ProgramName}(Gecko).lnk" "$INSTDIR\${ProgramName}(Gecko)-Uninst.exe" "" "" "" "" "" "Uninstall ${ProgramName}(Gecko)"
   ;Syntax for CreateShortCut: link.lnk target.file [parameters [icon.file [icon_index_number [start_options [keyboard_shortcut [description]]]]]]
 SectionEnd
 
 Section "Desktop Shortcut"
-  CreateShortCut "$DESKTOP\BasicBrowser(Gecko).lnk" "$INSTDIR\BasicBrowser.exe" "" "$INSTDIR\BasicBrowser.exe" "" "" "" "BasicBrowser(Gecko)"
+  CreateShortCut "$DESKTOP\${ProgramName}(Gecko).lnk" "$INSTDIR\${ProgramName}.exe" "" "$INSTDIR\${ProgramName}.exe" "" "" "" "${ProgramName}(Gecko)"
 SectionEnd
 
 Section "Quick Launch Shortcut"
-  CreateShortCut "$QUICKLAUNCH\BasicBrowser(Gecko).lnk" "$INSTDIR\BasicBrowser.exe" "" "$INSTDIR\BasicBrowser.exe" "" "" "" "BasicBrowser(Gecko)"
+  CreateShortCut "$QUICKLAUNCH\${ProgramName}(Gecko).lnk" "$INSTDIR\${ProgramName}.exe" "" "$INSTDIR\${ProgramName}.exe" "" "" "" "${ProgramName}(Gecko)"
 SectionEnd
 
-SubSection "Open in BasicBrowser(Gecko)"
+SubSection "Open in ${ProgramName}(Gecko)"
   Section "Add to Open With menu"
-    WriteRegStr HKCR "Applications\BasicBrowser(Gecko).exe\shell\open\command" "" "$\"$INSTDIR\BasicBrowser.exe$\" $\"%1$\""
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\OpenWithList" "k" "BasicBrowser(Gecko).exe"
+    WriteRegStr HKCR "Applications\${ProgramName}(Gecko).exe\shell\open\command" "" "$\"$INSTDIR\${ProgramName}.exe$\" $\"%1$\""
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\OpenWithList" "k" "${ProgramName}(Gecko).exe"
   SectionEnd
   
   Section "Set as default program"
-    WriteRegStr HKCR "Applications\BasicBrowser(Gecko).exe\shell\open\command" "" "$\"$INSTDIR\BasicBrowser.exe$\" $\"%1$\""
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\UserChoice" "Progid" "Applications\BasicBrowser(Gecko).exe"
+    WriteRegStr HKCR "Applications\${ProgramName}(Gecko).exe\shell\open\command" "" "$\"$INSTDIR\${ProgramName}.exe$\" $\"%1$\""
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\UserChoice" "Progid" "Applications\${ProgramName}(Gecko).exe"
   SectionEnd
   
 SubSectionEnd
 
-;Section "More apps from DeavmiOSS"
-; this should have sub options for available apps, that are downloaded
-;SectionEnd
+; Functions
+
+Function .onInit
+  SetShellVarContext all
+  SetAutoClose true
+FunctionEnd
+
+; Custom Install Complete page
+
+!include nsDialogs.nsh
+!include LogicLib.nsh ; For ${IF} logic
+Var Dialog
+Var Label
+Var CheckboxReadme
+Var CheckboxReadme_State
+Var CheckboxRunProgram
+Var CheckboxRunProgram_State
+
+Function postInstallShow
+  nsDialogs::Create 1018
+  Pop $Dialog
+  ${If} $Dialog == error
+    Abort
+  ${EndIf}
+  
+  ${NSD_CreateLabel} 0 0 100% 12u "Setup will launch these tasks when you click close:"
+  Pop $Label
+  
+  ${NSD_CreateCheckbox} 10u 30u 100% 10u "&Open Readme"
+  Pop $CheckboxReadme
+  ${If} $CheckboxReadme_State == ${BST_CHECKED}
+    ${NSD_Check} $CheckboxReadme
+  ${EndIf}
+  
+  ${NSD_CreateCheckbox} 10u 50u 100% 10u "&Launch ${ProgramName}"
+  Pop $CheckboxRunProgram
+  ${If} $CheckboxRunProgram_State == ${BST_CHECKED}
+    ${NSD_Check} $CheckboxRunProgram
+  ${EndIf}
+  
+  # alternative for the above ${If}:
+  #${NSD_SetState} $Checkbox_State
+  nsDialogs::Show
+FunctionEnd
+
+Function postInstallFinish
+  ${NSD_GetState} $CheckboxReadme $CheckboxReadme_State
+  ${NSD_GetState} $CheckboxRunProgram $CheckboxRunProgram_State
+  
+  ${If} $CheckboxReadme_State == ${BST_CHECKED}
+    ExecShell "open" "https://github.com/Walkman-Mirror/${ProgramName}Gecko/blob/gecko/README.md#basicbrowser-"
+  ${EndIf}
+  ${If} $CheckboxRunProgram_State == ${BST_CHECKED}
+    ExecShell "open" "$INSTDIR\${ProgramName}.exe"
+  ${EndIf}
+FunctionEnd
 
 ; Uninstaller
 
 Section "Uninstall"
-  Delete $INSTDIR\BasicBrowser(Gecko)-Uninst.exe   ; Remove Application Files
-  Delete $INSTDIR\BasicBrowser.exe
+  Delete $INSTDIR\${ProgramName}(Gecko)-Uninst.exe   ; Remove Application Files
+  Delete $INSTDIR\${ProgramName}.exe
   ; DLLs
   Delete $INSTDIR\*.dll
   ; Sub-Folders
@@ -107,49 +162,29 @@ Section "Uninstall"
   RMDir plugins
   RMDir res
   
-  Delete "$SMPROGRAMS\DeavmiOSS\BasicBrowser(Gecko).lnk"   ; Remove Start Menu Shortcuts & Folder
-  Delete "$SMPROGRAMS\DeavmiOSS\Uninstall BasicBrowser(Gecko).lnk"
+  Delete "$SMPROGRAMS\DeavmiOSS\${ProgramName}(Gecko).lnk"   ; Remove Start Menu Shortcuts & Folder
+  Delete "$SMPROGRAMS\DeavmiOSS\Uninstall ${ProgramName}(Gecko).lnk"
   RMDir $SMPROGRAMS\DeavmiOSS
   
-  Delete "$DESKTOP\BasicBrowser(Gecko).lnk"   ; Remove Desktop Shortcut
-  Delete "$QUICKLAUNCH\BasicBrowser(Gecko).lnk"   ; Remove Quick Launch Shortcut
+  Delete "$DESKTOP\${ProgramName}(Gecko).lnk"   ; Remove Desktop Shortcut
+  Delete "$QUICKLAUNCH\${ProgramName}(Gecko).lnk"   ; Remove Quick Launch Shortcut
   
-  DeleteRegKey HKCR Applications\BasicBrowser(Gecko).exe ; Remove open with association
+  DeleteRegKey HKCR Applications\${ProgramName}(Gecko).exe ; Remove open with association
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\OpenWithList" "k"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.html\UserChoice" "Progid" "Applications\chrome.exe"
 SectionEnd
 
-; Functions
+; Uninstaller Functions
 
-Function .onInit
-  MessageBox MB_YESNO "This will install BasicBrowser(Gecko). Do you wish to continue?" IDYES gogogo
-    Abort
-  gogogo:
-  SetBrandingImage "[/RESIZETOFIT] Resources\internet2.ico"
+Function un.onInit
   SetShellVarContext all
   SetAutoClose true
 FunctionEnd
 
-Function .onInstSuccess
-    MessageBox MB_YESNO "Install Succeeded! Open ReadMe?" IDNO NoReadme
-      ExecShell "open" "https://github.com/DeavmiOSS/BasicBrowserGecko/blob/gecko/README.md#basicbrowser-"
-    NoReadme:
-FunctionEnd
-
-; Uninstaller
-
-Function un.onInit
-    MessageBox MB_YESNO "This will uninstall BasicBrowser(Gecko). Continue?" IDYES NoAbort
-      Abort ; causes uninstaller to quit.
-    NoAbort:
-    SetShellVarContext all
-    SetAutoClose true
-FunctionEnd
-
 Function un.onUninstFailed
-    MessageBox MB_OK "Uninstall Cancelled"
+  MessageBox MB_OK "Uninstall Cancelled"
 FunctionEnd
 
 Function un.onUninstSuccess
-    MessageBox MB_OK "Uninstall Completed"
+  MessageBox MB_OK "Uninstall Completed"
 FunctionEnd
