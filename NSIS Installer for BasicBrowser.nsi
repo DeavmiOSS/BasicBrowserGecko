@@ -1,15 +1,23 @@
 ; BasicBrowser Installer NSIS Script
 ; get NSIS at http://nsis.sourceforge.net/Download
-; As a program that all Power PC users should have, Notepad++ is recommended to edit this file
 
 !define ProgramName "BasicBrowser"
+!define ProgramVersion 1.1.0.0
 Icon "Resources\internet2.ico"
 
 Name "${ProgramName}(Gecko)"
 Caption "${ProgramName}(Gecko) Installer"
 XPStyle on
+Unicode true
 ShowInstDetails show
 AutoCloseWindow true
+
+VIProductVersion ${ProgramVersion}
+VIAddVersionKey "ProductVersion" "${ProgramVersion}"
+VIAddVersionKey "ProductName" "${ProgramName}"
+VIAddVersionKey "FileVersion" "${ProgramVersion}"
+VIAddVersionKey "LegalCopyright" "FOSS Walkman"
+VIAddVersionKey "FileDescription" "${ProgramName} Installer"
 
 LicenseBkColor /windows
 LicenseData "LICENSE.md"
@@ -57,6 +65,7 @@ Section "Add to Windows Programs & Features"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProgramName}" "DisplayIcon" "$INSTDIR\${ProgramName}.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProgramName}" "InstallLocation" "$INSTDIR\"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProgramName}" "UninstallString" "$INSTDIR\${ProgramName}-Uninst.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProgramName}" "DisplayVersion" "${ProgramVersion}"
   
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProgramName}" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProgramName}" "NoRepair" 1
